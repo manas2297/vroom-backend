@@ -6,13 +6,13 @@ const { addUser, removeUser, getUser, getUsersInRoom } = require('./users')
 const PORT = process.env.PORT || 5000;
 const router = require('./router');
 const app = express();
-
+app.use(router);
+app.use(cors());
 
 
 const server = http.createServer(app);
 const io = socketio(server);
-app.use(router);
-app.use(cors());
+
 io.on('connection', (socket)=> { 
   socket.on('join', ({name, room},callback)=>{
 
