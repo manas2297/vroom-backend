@@ -2,31 +2,29 @@ const users = {};
 const socketToRoom = {};
 const addUser = (userData, socketId) => {
 
-  const {
+  let {
     name,
     room,
     roomId
   } = userData;
-  
+  if(!name) name = "anonymous";
   if(users[roomId]) {
     users[roomId].push(socketId);
   } else {
     users[roomId] = [socketId];
   }
   socketToRoom[socketId] = roomId;
-
-  // const existingUser = users.find((user)=> user.room === room && user.name === name);
-  // if(!name || !room) return {error: 'Username and room are required.'};
-  // if(existingUser) return {error:'Username is taken'};
-
+  console.log(users);
   const user = {roomId,name, room};
   return {user};
 }
 
-const removeUser = (id) => {
-  const index = users.findIndex((user) => user.id === id);
-
-  if(index !== -1) return users.splice(index, 1)[0];
+const removeUser = (socketId) => {
+  console.log(socketId);
+  const roomData = socketToRoom[socketId];
+  if(!roomData) throw new Error;
+  const index = users[roomData].findIndex(id => id === socketId );
+  if(index !== -1) return users[roomData].splice(index, 1)[0];
 }
 
 const getUser = (id) => users.find((user) => user.id === id);
